@@ -61,11 +61,11 @@ python manage.py runserver
 
 ## 📅 Roadmap
 
-- [x] Basic CRUD for Projects, Tasks, Tags, Comments
-- [x] User registration
-- [x] Pagination (5 per page)
+- ✅ Basic CRUD for Projects, Tasks, Tags, Comments
+- ✅ User registration
+- ✅ Pagination (5 per page)
 - [ ] Token authentication
-- [ ] Task filtering and search
+- ✅ Task filtering and search
 - [ ] Activity tracking (who updated what and when)
 - [ ] Custom endpoints (/tasks/{id}/mark-done/ etc.)
 - [ ] Swagger / Redoc API documentation
