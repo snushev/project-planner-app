@@ -44,8 +44,14 @@ python manage.py runserver
 
 🔒 Currently:
 
-- Registration is available via POST /register/
-- No login/auth yet – public endpoints only
+The API uses **session-based authentication**.
+
+- ✅ Register via `POST /register/`
+- ✅ Login via `POST /login/` (creates a browser session)
+- ✅ Logout via `GET /logout/` (destroys the session)
+- ✅ DRF’s browsable API works fully with login sessions
+
+No token authentication is required.
 
 🧪 Coming soon:
 
@@ -64,18 +70,20 @@ python manage.py runserver
 - ✅ Basic CRUD for Projects, Tasks, Tags, Comments
 - ✅ User registration
 - ✅ Pagination (5 per page)
-- [ ] Token authentication
 - ✅ Task filtering and search
+- ✅ Login/logout via session
 - [ ] Activity tracking (who updated what and when)
 - [ ] Custom endpoints (/tasks/{id}/mark-done/ etc.)
 - [ ] Swagger / Redoc API documentation
+- [ ] (Optional) Token or JWT auth as alternative
 
 ## 🧪 API Testing
 
 You can test the API using:
--Django’s built-in browsable API interface
--Postman / Insomnia
--cURL
+
+- ✅ Django’s built-in browsable API interface (with login session)
+- ✅ Postman / Insomnia (optional – not required for auth)
+- ✅ cURL
 
 ## 🤝 Contributing
 

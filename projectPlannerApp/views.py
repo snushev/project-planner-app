@@ -2,8 +2,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate, login, logout
 from .models import User, Project, Tag, Task, Comment
 from .serializers import UserSerializer, ProjectSerializer, TagSerializer, TaskSerializer, CommentSerializer, UserRegisterSerializer, LoginSerializer
 from rest_framework.generics import CreateAPIView
@@ -13,7 +12,9 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 # Create your views here.
 
 class UserView(APIView):    
-    "Show all registered users."
+    """
+    Show all registered users.
+    """
 
     permission_classes = [IsAdminUser]
 
@@ -23,47 +24,43 @@ class UserView(APIView):
         serializer = UserSerializer(all_users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-# A basic APIView logic for register a new user.
-
-# class UserRegisterView(APIView):
-
-#     def post(self, request):
-#         serializer = UserRegisterSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# Later switched to GenericAPIView to have the automatic creation form
-
 class UserRegisterView(CreateAPIView):
-    """Register a new user."""
+    """
+    Register a new user.
+    """
 
     serializer_class = UserRegisterSerializer
 
-class LoginView(APIView):
-    """Login user and return auth token."""
-    
-    def get(self, request):
-        return Response(LoginSerializer().data)
-    
+class SessionLoginView(APIView):
+    """
+    Login user using Django session auth.
+    """
+
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user = authenticate(
-                username=serializer.validated_data['username'],
-                password=serializer.validated_data['password']
-            )
-            if user:
-                token, _ = Token.objects.get_or_create(user=user)
-                return Response({'token': token.key})
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return Response({"message": "Login successful!"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class LogoutView(APIView):
+    """
+    Logout the current user.
+    """
+    def get(self, request):
+        logout(request)
+        return Response({'message': 'Logout successfull!'}, status=status.HTTP_200_OK)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    """Basic CRUD operations for Project objects. Filters and order fields"""
+    """
+    Basic CRUD operations for Project objects. Filters and order fields
+    """
 
     permission_classes = [IsAuthenticated]
     queryset = Project.objects.all()
@@ -73,18 +70,24 @@ class ProjectViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'description']
 
     def perform_create(self, serializer):
-        """Save the currently logged user as an owner when creating a new project."""
+        """
+        Save the currently logged user as an owner when creating a new project.
+        """
 
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        """Filters all projects and return only those create by the current user."""
+        """
+        Filters all projects and return only those create by the current user.
+        """
 
         return Project.objects.filter(owner=self.request.user)
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    """Basic CRUD operations for Tag objects."""
+    """
+    Basic CRUD operations for Tag objects.
+    """
 
     permission_classes = [IsAuthenticated]
     queryset = Tag.objects.all()
@@ -92,7 +95,9 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-    """Basic CRUD operations for Task objects. Filter, search and order fields."""
+    """
+    Basic CRUD operations for Task objects. Filter, search and order fields.
+    """
 
     permission_classes = [IsAuthenticated]
     queryset = Task.objects.all()
@@ -105,14 +110,18 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """Basic CRUD operations for Comment objects."""
+    """
+    Basic CRUD operations for Comment objects.
+    """
 
     permission_classes = [IsAuthenticated]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
     def perform_create(self, serializer):
-        """Set the logged-in user as the author of the comment on creation."""
+        """
+        Set the logged-in user as the author of the comment on creation.
+        """
 
         serializer.save(user=self.request.user)
 
