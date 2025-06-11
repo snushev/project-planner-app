@@ -72,9 +72,9 @@ No token authentication is required.
 - ✅ Pagination (5 per page)
 - ✅ Task filtering and search
 - ✅ Login/logout via session
+- ✅ Swagger / Redoc API documentation
 - [ ] Activity tracking (who updated what and when)
 - [ ] Custom endpoints (/tasks/{id}/mark-done/ etc.)
-- [ ] Swagger / Redoc API documentation
 - [ ] (Optional) Token or JWT auth as alternative
 
 ## 🧪 API Testing
