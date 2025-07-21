@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'projectPlanner.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'projectPlannerDB',          # Database name
+        'USER': 'postgres',         # PostgreSQL username
+        'PASSWORD': 'password', # PostgreSQL password
+        'HOST': 'db',      # Set to '127.0.0.1' if needed
+        'PORT': '5432',           # Default PostgreSQL port
     }
 }
 

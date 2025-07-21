@@ -26,7 +26,8 @@ Users can register, create projects, add tasks with tags, and comment on tasks.
 - Python 3.11+
 - Django
 - Django REST Framework
-- SQLite (for development)
+- PostgreSQL
+- Docker
 
 ---
 
@@ -35,9 +36,7 @@ Users can register, create projects, add tasks with tags, and comment on tasks.
 ```bash
 git clone https://github.com/yourusername/taskhub-api.git
 cd taskhub-api
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+docker-compose up --build
 ```
 
 ## 🔐 Authentication
@@ -73,6 +72,7 @@ No token authentication is required.
 - ✅ Task filtering and search
 - ✅ Login/logout via session
 - ✅ Swagger / Redoc API documentation
+- ✅ Docker and Docker-compose
 - [ ] Activity tracking (who updated what and when)
 - [ ] Custom endpoints (/tasks/{id}/mark-done/ etc.)
 - [ ] (Optional) Token or JWT auth as alternative
